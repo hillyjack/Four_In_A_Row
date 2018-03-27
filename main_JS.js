@@ -1,28 +1,19 @@
 let turnColor = 'brown';
-let gameBoard = [];
 const rows = 7;
 const columns = 6;
-
-
 
 let rowsCounters={};
 let rowIndex, colIndex;
 
 let sepRowArr = document.getElementsByClassName("sep_row");
 
-for(let i = 0; i < rows; i++){
-    gameBoard[i] = []
-    for(let j = 0; j < columns; j++){
-        gameBoard[i][j] = null;
-    }
-}
-
-
 Array.from(sepRowArr, item => item).forEach(function(element) {
     element.onmouseover = showCircle;
     element.onmouseout = hideCircle;
     element.onclick = play;
 });
+
+memsetGameBoard(rows, columns);
 
 let rowsArr = document.getElementsByClassName("row");
 
