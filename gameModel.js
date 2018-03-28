@@ -1,8 +1,10 @@
-let circleModel = function (){
+
+
+let CircleModel = function (){
     this.circleColor = null;
 };
 
-circleModel.prototype = {
+CircleModel.prototype = {
     changeColor: function (color){
     this.circleColor = color;
     },
@@ -17,16 +19,22 @@ let GameBoardModel = function (){
 };
 
 GameBoardModel.prototype = {
-    clear: function () {
+    clearGameBoard: function () {
         this.gameBoard = [];
     },
     initGameBoard: function (rows, columns) {
         for(let i = 0; i < rows; i++){
-            gameBoard[i] = []
+            this.gameBoard[i] = []
             for(let j = 0; j < columns; j++){
-                gameBoard[i][j] = null;
+                this.gameBoard[i][j] = new CircleModel();
             }
         }
+    },
+    addCircleToGameBoard: function(rowIndex, colIndex, turnColor) {
+        this.gameBoard[rowIndex][colIndex].changeColor(turnColor);
+    },
+    deleteCircleFromGameBoard: function(rowIndex, colIndex, turnColor){
+            this.gameBoard[rowIndex][colIndex].deleteColor();
     },
 
 };

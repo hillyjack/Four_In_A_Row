@@ -58,9 +58,24 @@ body{
     background-color: brown;
 }
 
+
 .circle_yellowgreen{
     background-color: yellowgreen;
 }
+
+/*
+.hover_none{
+    background-color: #dadada;
+}
+
+.hover_brown{
+    background-color: brown;
+}
+
+.hover_yellowgreen{
+    background-color: yellowgreen;
+}
+*/
 
 .sep_row{
     width: 60%;
