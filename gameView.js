@@ -1,16 +1,18 @@
 let GameView = function(){
-    this.rowsCounters = {};
+    this.rowsCounters = [];
+    this.currentPlayerColor = "";
 };
 
 GameView.prototype = {
-    initGameView: function(){
-        let sepRowArr = document.getElementsByClassName("sep_row");
+    initGameView: function(firstPlayerColor){
+        let clickableCirclesArr = document.getElementsByClassName("clickableCircle");
+        this.currentPlayerColor = firstPlayerColor;
 
-        Array.from(sepRowArr, item => item).forEach(function(element) {
-            element.onmouseover = this.showCircle;
-            element.onmouseout = this.hideCircle;
-            element.onclick = this.letsPlay;
-        });
+        Array.from(clickableCirclesArr, item => item).forEach(function(element) {
+            element.onmouseover = this.showCircle.bind(this);
+            element.onmouseout = this.hideCircle.bind(this);
+            element.onclick = this.letsPlay.bind(this);
+        }, this);
         this.initRowsCounters();
 
     },
@@ -19,32 +21,38 @@ GameView.prototype = {
         let rowsArr = document.getElementsByClassName("row");
         let rowIndex;
 
-        Array.from(rowsArr, item => item).forEach(function(element) {
-            rowIndex = Number(element.id.substring((element.id).length-1,(element.id).length));
+        Array.from(rowsArr, row => row).forEach(function(row) {
+            rowIndex = Number(row.id.substring((row.id).length-1,(row.id).length));
             this.rowsCounters[rowIndex] = 0;
-        });
+        }, this);
     },
 
     setController : function(controller){
         this.controller = controller;
     },
 
-    addCircle : function (rowIndex, colIndex, turnColor){
+    addCircle : function (rowIndex, colIndex, currentPlayerColor){
         let currentCircle;
         currentCircle = "circle_" + rowIndex + "_" + colIndex;
         currentCircle = document.getElementById(currentCircle);
-        currentCircle.classList.add("circle_" + turnColor);
+        currentCircle.classList.add("circle_" + currentPlayerColor);
     },
 
-    showCircle: function (turnColor){
-        this.style.backgroundColor = turnColor;
+    showCircle: function (event){
+        //console.log(arguments)
+        event.srcElement.style.backgroundColor = this.currentPlayerColor;
     },
-    hideCircle: function (currentCircle){
-        currentCircle.style.backgroundColor = '#dadada';
+    hideCircle: function (event){
+        event.srcElement.style.backgroundColor = '#dadada';
     },
 
-    letsPlay: function (){
-        let currentRowId = this.id;
+    ChangeCurrentPlayerColor: function(currentPlayerColor){
+        this.currentPlayerColor = currentPlayerColor;
+    },
+
+    letsPlay: function (event){
+        this.hideCircle(event); //????@?$?%?$#?#?^?$%$?&%?
+        let currentRowId = event.srcElement.id;  //????@?$?%?$#?#?^?$%$?&%?
         console.log(currentRowId);
         let rowIndex = Number(currentRowId.substring(currentRowId.length-1,currentRowId.length));
         let colIndex = this.rowsCounters[rowIndex]++;
