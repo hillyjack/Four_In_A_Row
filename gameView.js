@@ -1,6 +1,7 @@
 let GameView = function(){
     this.rowsCounters = [];
     this.currentPlayerColor = "";
+    this.callbacksFunc = [];
 };
 
 GameView.prototype = {
@@ -49,15 +50,30 @@ GameView.prototype = {
         this.currentPlayerColor = currentPlayerColor;
     },
     clearBoardView: function (){
-        location.reload();
+        for(let i = 0; i < this.rowsCounters.length; i++) {
+            let currentDisc;
+            for(let j = 0; j < this.rowsCounters[i]; j++){
+            currentDisc = "disc_" + i + "_" + j;
+            currentDisc = document.getElementById(currentDisc);
+            currentDisc.className = "disc"
+            }
+        }
     },
+    displayMsg: function(txt){
 
+    },
+    removeCustomAlert: function() {
+
+    },
+    pushCallbacksFunc: function(func) {
+        this.callbacksFunc.push(func);
+    },
     letsPlay: function (event){
         this.hideClickableDisc(event);
         let currentRowId = event.srcElement.id;
         let rowIndex = Number(currentRowId.substring(currentRowId.length-1,currentRowId.length));
         let colIndex = this.rowsCounters[rowIndex]++;
-        this.controller.play(rowIndex, colIndex);
+        this.callbacksFunc[0].play(rowIndex, colIndex);
     }
 };
 

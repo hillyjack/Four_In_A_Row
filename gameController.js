@@ -9,25 +9,32 @@ GameController.prototype = {
     initController:function(rows, columns, firstPlayerColor){
         firstPlayerColor? this.currentPlayerColor = this.redPlayerColor : this.currentPlayerColor = this.greenPlayerColor;
         this.model.initGameBoard(rows, columns);
-        this.view.initGameView(this.currentPlayerColor );
+        this.view.initGameView(this.currentPlayerColor);
+        this.view.pushCallbacksFunc(this.play);
     },
 
     play : function(rowIndex, colIndex){
         if(colIndex < 6) {
             this.model.addDiscToGameBoard(rowIndex, colIndex, this.currentPlayerColor);
             this.view.addDiscToView(rowIndex, colIndex, this.currentPlayerColor);
-            this.winner = this.model.winningCheack(rowIndex, colIndex, this.currentPlayerColor);
-            if(!this.winner){
+            setTimeout(() =>
+            {
+                this.winner = this.model.winningCheack(rowIndex, colIndex, this.currentPlayerColor)
+                if(!this.winner){
 
 
-            this.currentPlayerColor === this.greenPlayerColor ? this.currentPlayerColor = this.redPlayerColor : this.currentPlayerColor = this.greenPlayerColor
-            this.view.ChangeCurrentPlayerColor(this.currentPlayerColor);
-            }
-            else{
-                alert(this.winner + " Player Won!!" );
-                this.view.clearBoardView();
-                //this.model.clearGameBoard();
-            }
+                    this.currentPlayerColor === this.greenPlayerColor ? this.currentPlayerColor = this.redPlayerColor : this.currentPlayerColor = this.greenPlayerColor
+                    this.view.ChangeCurrentPlayerColor(this.currentPlayerColor);
+                }
+                else{
+                    alert(this.winner + " Player Won!!" );
+                    this.view.clearBoardView();
+                    this.model.clearGameBoard();
+                }
+
+            },0);
+
+
         }
     },
 };
