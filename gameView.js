@@ -5,12 +5,12 @@ let GameView = function(){
 
 GameView.prototype = {
     initGameView: function(firstPlayerColor){
-        let clickableCirclesArr = document.getElementsByClassName("clickableCircle");
+        let clickableTopDiscsArr = document.getElementsByClassName("clickableDisc");
         this.currentPlayerColor = firstPlayerColor;
 
-        Array.from(clickableCirclesArr, item => item).forEach(function(element) {
-            element.onmouseover = this.showCircle.bind(this);
-            element.onmouseout = this.hideCircle.bind(this);
+        Array.from(clickableTopDiscsArr, item => item).forEach(function(element) {
+            element.onmouseover = this.showClickableDisc.bind(this);
+            element.onmouseout = this.hideClickableDisc.bind(this);
             element.onclick = this.letsPlay.bind(this);
         }, this);
         this.initRowsCounters();
@@ -31,35 +31,34 @@ GameView.prototype = {
         this.controller = controller;
     },
 
-    addCircle : function (rowIndex, colIndex, currentPlayerColor){
-        let currentCircle;
-        currentCircle = "circle_" + rowIndex + "_" + colIndex;
-        currentCircle = document.getElementById(currentCircle);
-        currentCircle.classList.add("circle_" + currentPlayerColor);
+    addDiscToView : function (rowIndex, colIndex, currentPlayerColor){
+        let currentDisc;
+        currentDisc = "disc_" + rowIndex + "_" + colIndex;
+        currentDisc = document.getElementById(currentDisc);
+        currentDisc.classList.add("disc_" + currentPlayerColor);
     },
 
-    showCircle: function (event){
-        //console.log(arguments)
+    showClickableDisc: function (event){
         event.srcElement.style.backgroundColor = this.currentPlayerColor;
     },
-    hideCircle: function (event){
+    hideClickableDisc: function (event){
         event.srcElement.style.backgroundColor = '#dadada';
     },
 
     ChangeCurrentPlayerColor: function(currentPlayerColor){
         this.currentPlayerColor = currentPlayerColor;
     },
+    clearBoardView: function (){
+        location.reload();
+    },
 
     letsPlay: function (event){
-        this.hideCircle(event); //????@?$?%?$#?#?^?$%$?&%?
-        let currentRowId = event.srcElement.id;  //????@?$?%?$#?#?^?$%$?&%?
-        console.log(currentRowId);
+        this.hideClickableDisc(event);
+        let currentRowId = event.srcElement.id;
         let rowIndex = Number(currentRowId.substring(currentRowId.length-1,currentRowId.length));
         let colIndex = this.rowsCounters[rowIndex]++;
         this.controller.play(rowIndex, colIndex);
-
     }
-
 };
 
 

@@ -22,7 +22,7 @@ body{
     padding-right: 0.5vw;
 }
 
-.clickableCircle{
+.clickableDisc{
     width: 6.6vw;
     margin: 0.7vw;
 }
@@ -45,7 +45,7 @@ body{
     flex-direction: column;
 }
 
-.circle{
+.disc{
     width: 80%;
     height: auto;
     margin: 6%;
@@ -54,12 +54,12 @@ body{
     border-radius: 50%;
 }
 
-.circle_brown{
+.disc_brown{
     background-color: brown;
 }
 
 
-.circle_yellowgreen{
+.disc_yellowgreen{
     background-color: yellowgreen;
 }
 
@@ -77,7 +77,7 @@ body{
 }
 */
 
-.clickableCircle{
+.clickableDisc{
     width: 60%;
     height: auto;
     margin: 2%;

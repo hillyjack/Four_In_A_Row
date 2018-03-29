@@ -1,10 +1,10 @@
 
 
-let CircleModel = function (){
+let DiscModel = function (){
     this.circleColor = null;
 };
 
-CircleModel.prototype = {
+DiscModel.prototype = {
     setColor: function (color){
     this.circleColor = color;
     },
@@ -26,61 +26,102 @@ let GameBoardModel = function (){
 GameBoardModel.prototype = {
     clearGameBoard: function () {
         this.gameBoard = [];
+        this.initGameBoard(this.rows, this.columns);
     },
     initGameBoard: function (rows, columns) {
         for(let i = 0; i < rows; i++){
-            this.gameBoard[i] = []
+            this.gameBoard[i] = [];
             for(let j = 0; j < columns; j++){
-                this.gameBoard[i][j] = new CircleModel();
+                this.gameBoard[i][j] = new DiscModel();
             }
         }
         this.rows = rows;
         this.columns = columns;
     },
-    addCircleToGameBoard: function(rowIndex, colIndex, currentPlayerColor) {
+    addDiscToGameBoard: function (rowIndex, colIndex, currentPlayerColor) {
         this.gameBoard[rowIndex][colIndex].setColor(currentPlayerColor);
     },
     deleteCircleFromGameBoard: function(rowIndex, colIndex){
             this.gameBoard[rowIndex][colIndex].deleteColor();
     },
     winningCheack: function (rowIndex,colIndex, currentPlayerColor) {
-        this.srcRowIndex = rowIndex;
-        this.otherSide = false;
-        rowIndex += 1;
-        //this.horizentalCheack(rowIndex,colIndex, currentPlayerColor);
-        console.log("horizentalCheack " + this.horizentalCheack(rowIndex,colIndex, currentPlayerColor))
+        let sum = 1;
+        this.rowIndex = rowIndex;
+        this.colIndex = colIndex;
+        this.currentPlayerColor = currentPlayerColor;
+        sum += this.horizentalCheack(true, this.rowIndex ) + this.horizentalCheack(false, this.rowIndex);
+        if (sum >= 4){
+            return this.currentPlayerColor
+        }
+        sum = 1 + this.varticalCheack(this.colIndex);
+        if (sum >= 4){
+            return this.currentPlayerColor
+        }
+        sum = 1 + this.ascendingDiagonalCheack(true, this.rowIndex, this.colIndex) + this.ascendingDiagonalCheack(false, this.rowIndex, this.colIndex);
+        if (sum >= 4){
+            return this.currentPlayerColor
+        }
+        sum = 1 + this.decendingDiagonalCheack(true, this.rowIndex, this.colIndex) + this.decendingDiagonalCheack(false, this.rowIndex, this.colIndex);
+        if (sum >= 4){
+            return this.currentPlayerColor
+        }
+        return 0;
+
 
     },
-    horizentalCheack: function (rowIndex,colIndex, currentPlayerColor) {
+    horizentalCheack: function (firstSide, rowIndex) {
         let counter = 0;
+        firstSide ? rowIndex = rowIndex + 1: rowIndex = rowIndex - 1;
+
         if (rowIndex < 0 || rowIndex === this.rows){
             return counter;
         }
-        if(this.gameBoard[rowIndex][colIndex].getColor() === currentPlayerColor){
-            if (!this.otherSide ) {
-                counter = 1 + this.horizentalCheack(rowIndex + 1, colIndex, currentPlayerColor);
-                rowIndex -= 1;
-            }
-            if (rowIndex  === this.srcRowIndex || this.otherSide ){
-                this.otherSide = true;
-                counter = counter + 1 + this.horizentalCheack(rowIndex - 1, colIndex, currentPlayerColor);
-            }
+        if(this.gameBoard[rowIndex][this.colIndex].getColor() === this.currentPlayerColor){
+            counter = 1 + this.horizentalCheack(firstSide, rowIndex);
         }
         return counter;
     },
-    genericCheack: function (rowIndex, colIndex, currentPlayerColor) {
+    varticalCheack: function (colIndex) {
+        let counter = 0;
+        colIndex = colIndex - 1;
 
-        if (rowIndex < 0 || rowIndex === this.rows){
-            return 0
-        }
         if (colIndex < 0 || colIndex === this.columns){
-            return 0
+            return counter;
         }
-        if(this.gameBoard[rowIndex][colIndex] === currentPlayerColor){
-            return 1
+        if(this.gameBoard[this.rowIndex][colIndex].getColor() === this.currentPlayerColor){
+            counter = 1 + this.varticalCheack(colIndex);
         }
-        return 0
-    }
-
+        return counter;
+    },
+    ascendingDiagonalCheack: function (firstSide, rowIndex, colIndex) {
+        let counter = 0;
+        firstSide ? rowIndex = rowIndex + 1: rowIndex = rowIndex - 1;
+        if (rowIndex < 0 || rowIndex === this.rows){
+            return counter;
+        }
+        firstSide ? colIndex = colIndex + 1: colIndex = colIndex - 1;
+        if (colIndex < 0 || colIndex === this.columns){
+            return counter;
+        }
+        if(this.gameBoard[rowIndex][colIndex].getColor() === this.currentPlayerColor){
+            counter = 1 + this.ascendingDiagonalCheack(firstSide, rowIndex, colIndex);
+        }
+        return counter;
+    },
+    decendingDiagonalCheack: function (firstSide, rowIndex, colIndex) {
+        let counter = 0;
+        firstSide ? rowIndex = rowIndex + 1: rowIndex = rowIndex - 1;
+        if (rowIndex < 0 || rowIndex === this.rows){
+            return counter;
+        }
+        firstSide ? colIndex = colIndex - 1: colIndex = colIndex + 1;
+        if (colIndex < 0 || colIndex === this.columns){
+            return counter;
+        }
+        if(this.gameBoard[rowIndex][colIndex].getColor() === this.currentPlayerColor){
+            counter = 1 + this.decendingDiagonalCheack(firstSide, rowIndex, colIndex);
+        }
+        return counter;
+    },
 
 };

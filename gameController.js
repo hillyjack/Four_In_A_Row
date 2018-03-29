@@ -8,37 +8,29 @@ let GameController = function (gameModel, gameView) {
 GameController.prototype = {
     initController:function(rows, columns, firstPlayerColor){
         firstPlayerColor? this.currentPlayerColor = this.redPlayerColor : this.currentPlayerColor = this.greenPlayerColor;
-
-        //this.rowsCounters={};
         this.model.initGameBoard(rows, columns);
         this.view.initGameView(this.currentPlayerColor );
     },
 
     play : function(rowIndex, colIndex){
-        //gameView.hideCircle(this)
-        console.log(colIndex);
         if(colIndex < 6) {
-            this.model.addCircleToGameBoard(rowIndex, colIndex, this.currentPlayerColor);
-            this.model.winningCheack(rowIndex, colIndex, this.currentPlayerColor);
-            this.view.addCircle(rowIndex, colIndex, this.currentPlayerColor);
+            this.model.addDiscToGameBoard(rowIndex, colIndex, this.currentPlayerColor);
+            this.view.addDiscToView(rowIndex, colIndex, this.currentPlayerColor);
+            this.winner = this.model.winningCheack(rowIndex, colIndex, this.currentPlayerColor);
+            if(!this.winner){
+
 
             this.currentPlayerColor === this.greenPlayerColor ? this.currentPlayerColor = this.redPlayerColor : this.currentPlayerColor = this.greenPlayerColor
             this.view.ChangeCurrentPlayerColor(this.currentPlayerColor);
+            }
+            else{
+                alert(this.winner + " Player Won!!" );
+                this.view.clearBoardView();
+                //this.model.clearGameBoard();
+            }
         }
     },
 };
-
-
-//gameBoard.updateGameBoard(rowIndex, colIndex, this.turnColor);
-//gameView.updateView(rowIndex, colIndex, this.turnColor);
-
-//let gameBoard = new GameBoardModel();
-//gameBoard.initGameBoard(this.rows, this.columns);
-
-//let gameView = new GameView();
-//gameView.initGameView();
-
-
 
 
 
