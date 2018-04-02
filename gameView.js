@@ -2,6 +2,8 @@ let GameView = function(){
     this.rowsCounters = [];
     this.currentPlayerColor = "";
     this.callbacksFunc = [];
+    this.redPlayerScore = 0;
+    this.greenPlayerScore = 0;
 };
 
 GameView.prototype = {
@@ -26,10 +28,6 @@ GameView.prototype = {
             rowIndex = Number(row.id.substring((row.id).length-1,(row.id).length));
             this.rowsCounters[rowIndex] = 0;
         }, this);
-    },
-
-    setController : function(controller){
-        this.controller = controller;
     },
 
     addDiscToView : function (rowIndex, colIndex, currentPlayerColor){
@@ -57,10 +55,17 @@ GameView.prototype = {
             currentDisc = document.getElementById(currentDisc);
             currentDisc.className = "disc"
             }
+            this.rowsCounters[i] = 0
         }
     },
-    displayMsg: function(txt){
+    displayMsg: function(txtMsg) {
+        let winnerPlayer;
+        let newScore;
+        this.currentPlayerColor === "brown" ? newScore = ++this.redPlayerScore: newScore = ++this.greenPlayerScore;
+        winnerPlayer =  this.currentPlayerColor + "PlayerScore";
+        document.getElementById(winnerPlayer).innerHTML = newScore;
 
+        alert(txtMsg);
     },
     removeCustomAlert: function() {
 
@@ -73,7 +78,7 @@ GameView.prototype = {
         let currentRowId = event.srcElement.id;
         let rowIndex = Number(currentRowId.substring(currentRowId.length-1,currentRowId.length));
         let colIndex = this.rowsCounters[rowIndex]++;
-        this.callbacksFunc[0].play(rowIndex, colIndex);
+        this.callbacksFunc.forEach(((func) => func(rowIndex, colIndex)),this);
     }
 };
 

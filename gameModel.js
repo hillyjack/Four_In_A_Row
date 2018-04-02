@@ -28,7 +28,7 @@ GameBoardModel.prototype = {
         this.gameBoard = [];
         this.initGameBoard(this.rows, this.columns);
     },
-    initGameBoard: function (rows, columns) {
+    initGameBoard: function (rows, columns, sumToWin) {
         for(let i = 0; i < rows; i++){
             this.gameBoard[i] = [];
             for(let j = 0; j < columns; j++){
@@ -37,6 +37,7 @@ GameBoardModel.prototype = {
         }
         this.rows = rows;
         this.columns = columns;
+        this.sumToWin = sumToWin;
     },
     addDiscToGameBoard: function (rowIndex, colIndex, currentPlayerColor) {
         this.gameBoard[rowIndex][colIndex].setColor(currentPlayerColor);
@@ -50,19 +51,19 @@ GameBoardModel.prototype = {
         this.colIndex = colIndex;
         this.currentPlayerColor = currentPlayerColor;
         sum += this.horizentalCheack(true, this.rowIndex ) + this.horizentalCheack(false, this.rowIndex);
-        if (sum >= 4){
+        if (sum >= this.sumToWin){
             return this.currentPlayerColor
         }
         sum = 1 + this.varticalCheack(this.colIndex);
-        if (sum >= 4){
+        if (sum >= this.sumToWin){
             return this.currentPlayerColor
         }
         sum = 1 + this.ascendingDiagonalCheack(true, this.rowIndex, this.colIndex) + this.ascendingDiagonalCheack(false, this.rowIndex, this.colIndex);
-        if (sum >= 4){
+        if (sum >= this.sumToWin){
             return this.currentPlayerColor
         }
         sum = 1 + this.decendingDiagonalCheack(true, this.rowIndex, this.colIndex) + this.decendingDiagonalCheack(false, this.rowIndex, this.colIndex);
-        if (sum >= 4){
+        if (sum >= this.sumToWin){
             return this.currentPlayerColor
         }
         return 0;
@@ -93,7 +94,7 @@ GameBoardModel.prototype = {
         }
         return counter;
     },
-    ascendingDiagonalCheack: function (firstSide, rowIndex, colIndex) {
+    ascendingDiagonalCheck: function (firstSide, rowIndex, colIndex) {
         let counter = 0;
         firstSide ? rowIndex = rowIndex + 1: rowIndex = rowIndex - 1;
         if (rowIndex < 0 || rowIndex === this.rows){
@@ -104,11 +105,11 @@ GameBoardModel.prototype = {
             return counter;
         }
         if(this.gameBoard[rowIndex][colIndex].getColor() === this.currentPlayerColor){
-            counter = 1 + this.ascendingDiagonalCheack(firstSide, rowIndex, colIndex);
+            counter = 1 + this.ascendingDiagonalCheck(firstSide, rowIndex, colIndex);
         }
         return counter;
     },
-    decendingDiagonalCheack: function (firstSide, rowIndex, colIndex) {
+    decendingDiagonalCheck: function (firstSide, rowIndex, colIndex) {
         let counter = 0;
         firstSide ? rowIndex = rowIndex + 1: rowIndex = rowIndex - 1;
         if (rowIndex < 0 || rowIndex === this.rows){
@@ -119,9 +120,24 @@ GameBoardModel.prototype = {
             return counter;
         }
         if(this.gameBoard[rowIndex][colIndex].getColor() === this.currentPlayerColor){
-            counter = 1 + this.decendingDiagonalCheack(firstSide, rowIndex, colIndex);
+            counter = 1 + this.decendingDiagonalCheck(firstSide, rowIndex, colIndex);
         }
         return counter;
     },
+    genericCheck: function (direction, rowIndex, colIndex) {
+        let counter = 0;
+        direction ? rowIndex = rowIndex + 1: rowIndex = rowIndex - 1;
+        if (rowIndex < 0 || rowIndex === this.rows){
+            return counter;
+        }
+        direction ? colIndex = colIndex - 1: colIndex = colIndex + 1;
+        if (colIndex < 0 || colIndex === this.columns){
+            return counter;
+        }
+        if(this.gameBoard[rowIndex][colIndex].getColor() === this.currentPlayerColor){
+            counter = 1 + this.decendingDiagonalCheck(firstSide, rowIndex, colIndex);
+        }
+        return counter;
+    }
 
 };
